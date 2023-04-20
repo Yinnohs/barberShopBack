@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { hashPassword } from './utils';
+import { checkPassword, hashPassword } from './utils';
 import { SingInDto, SingUpDto } from './dto';
 
 @Injectable()
@@ -37,7 +37,21 @@ export class AuthService {
   }
 
   async signin(singInDto: SingInDto) {
-    return { message: 'signin good' };
+    const { email, password } = singInDto;
+
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new BadRequestException('Credenciales Erróneas');
+    }
+    const isMatch: boolean = await checkPassword(password, user.password);
+
+    if (!isMatch) {
+      throw new BadRequestException('Credenciales Erróneas');
+    }
+
+    //sign JWT Token
+
+    return user;
   }
 
   async signout() {
