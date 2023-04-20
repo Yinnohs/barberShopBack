@@ -25,7 +25,7 @@ model User{
     name String
     surname String
     password String
-    schedule String[]
+    schedules String[]
     createdAt DateTime
     updatedAt DateTime
     deletedAt DateTime
