@@ -20,16 +20,16 @@ model Role{
 }
 
 model User{
-    id Int @default(autoincrement()) @id
+    id Int @unique @default(autoincrement()) @id
     email String @unique
     name String
     surname String
     password String
     schedules String[]
-    createdAt DateTime
-    updatedAt DateTime
-    deletedAt DateTime
-    roles Role[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    deletedAt DateTime? 
+    roles Role[] 
 }
 
 

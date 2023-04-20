@@ -1,12 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { SingUpDto } from './dto/SignUp.dto';
+import { hashPassword } from './utils';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly prisma: PrismaService) {}
 
   async signup(singUpDto: SingUpDto) {
+    const salts = 10;
     const { email, name, password, surname } = singUpDto;
 
     const userExist = await this.prisma.user.findUnique({ where: { email } });
@@ -15,7 +17,23 @@ export class AuthService {
       throw new BadRequestException('El email ya existe');
     }
 
-    return { message: 'signup good' };
+    const userPassword = await hashPassword(password, salts);
+
+    const currentDate = new Date();
+
+    const user = await this.prisma.user.create({
+      data: {
+        name,
+        email,
+        password: userPassword,
+        surname,
+        deletedAt: null,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+      },
+    });
+
+    return user;
   }
 
   async signin() {
