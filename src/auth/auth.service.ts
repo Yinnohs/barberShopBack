@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { SingUpDto } from './dto/SignUp.dto';
 import { hashPassword } from './utils';
+import { SingInDto, SingUpDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +36,7 @@ export class AuthService {
     return user;
   }
 
-  async signin() {
+  async signin(singInDto: SingInDto) {
     return { message: 'signin good' };
   }
 
