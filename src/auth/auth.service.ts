@@ -2,10 +2,14 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { checkPassword, hashPassword } from './utils';
 import { SingInDto, SingUpDto } from './dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async signup(singUpDto: SingUpDto) {
     const salts = 10;
@@ -39,7 +43,10 @@ export class AuthService {
   async signin(singInDto: SingInDto) {
     const { email, password } = singInDto;
 
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: { roles: true },
+    });
     if (!user) {
       throw new BadRequestException('Credenciales Erróneas');
     }
@@ -50,8 +57,11 @@ export class AuthService {
     }
 
     //sign JWT Token
+    const payload = { id: user.id, roles: user.roles, email: user.email };
 
-    return user;
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 
   async signout() {
