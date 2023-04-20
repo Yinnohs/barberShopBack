@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { SingUpDto } from './dto/SignUp.dto';
 
@@ -8,6 +8,13 @@ export class AuthService {
 
   async signup(singUpDto: SingUpDto) {
     const { email, name, password, surname } = singUpDto;
+
+    const userExist = await this.prisma.user.findUnique({ where: { email } });
+
+    if (userExist) {
+      throw new BadRequestException('El email ya existe');
+    }
+
     return { message: 'signup good' };
   }
 
