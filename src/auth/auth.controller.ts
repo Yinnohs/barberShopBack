@@ -1,13 +1,14 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SingUpDto, SingInDto } from './dto';
+import { Tokens } from './types';
 
 @Controller('/api/v1/auth/')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/local/signup')
-  async signupLocal(@Body() singUpDto: SingUpDto) {
+  async signupLocal(@Body() singUpDto: SingUpDto): Promise<Tokens> {
     return await this.authService.signupLocal(singUpDto);
   }
 
