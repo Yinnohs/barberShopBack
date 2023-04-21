@@ -12,6 +12,7 @@ import { SingUpDto, SingInDto } from './dto';
 import { Tokens } from './types';
 import { Request } from 'express';
 import { AuthGuard } from '@nestjs/passport';
+import { AtGuard, RtGuard } from 'src/common';
 
 @Controller('/api/v1/auth/')
 export class AuthController {
@@ -29,7 +30,7 @@ export class AuthController {
     return this.authService.signinLocal(singInDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AtGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/logout')
   async logout(@Req() req: Request) {
@@ -38,7 +39,7 @@ export class AuthController {
     return this.authService.logout(user['sub']);
   }
 
-  @UseGuards(AuthGuard('jwt-refresh'))
+  @UseGuards(RtGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/refresh')
   async refreshToken(@Req() req: Request) {
