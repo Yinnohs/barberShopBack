@@ -7,23 +7,23 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/local/signup')
-  async signup(@Body() singUpDto: SingUpDto) {
-    return await this.authService.signup(singUpDto);
+  async signupLocal(@Body() singUpDto: SingUpDto) {
+    return await this.authService.signupLocal(singUpDto);
   }
 
   @HttpCode(200)
   @Post('/local/signin')
-  async signin(@Body() singInDto: SingInDto) {
-    return this.authService.signin(singInDto);
+  async signinLocal(@Body() singInDto: SingInDto) {
+    return this.authService.signinLocal(singInDto);
   }
 
   @Post('/local/signout')
-  async signout() {
-    return null;
+  async signoutLocal() {
+    this.authService.signoutLocal();
   }
 
   @Post('/refresh')
   async refreshToken() {
-    return null;
+    this.authService.refreshToken();
   }
 }

@@ -11,7 +11,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signup(singUpDto: SingUpDto) {
+  async signupLocal(singUpDto: SingUpDto) {
     const salts = 10;
     const { email, name, password, surname } = singUpDto;
 
@@ -40,7 +40,7 @@ export class AuthService {
     return user;
   }
 
-  async signin(singInDto: SingInDto) {
+  async signinLocal(singInDto: SingInDto) {
     const { email, password } = singInDto;
 
     const user = await this.prisma.user.findUnique({
@@ -64,7 +64,7 @@ export class AuthService {
     };
   }
 
-  async signout() {
+  async signoutLocal() {
     return null;
   }
 
