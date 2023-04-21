@@ -82,11 +82,18 @@ export class AuthService {
         hashedRt: null,
       },
     });
-    return null;
+    return { message: 'Se a deslogeado correctamente' };
   }
 
-  async refreshToken() {
-    return null;
+  async refreshToken(userId: number, rt: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new ForbiddenException('Acceso denegado');
+    const rtMatches = await checkPassword(rt, user.hashedRt);
+    if (!rtMatches) throw new ForbiddenException('Acceso denegado');
+
+    const tokens = await this.getTokens(user.id, user.email, []);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+    return tokens;
   }
 
   async updateRefreshToken(userId: number, rt: string) {
