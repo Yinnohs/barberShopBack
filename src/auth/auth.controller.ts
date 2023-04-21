@@ -18,12 +18,12 @@ export class AuthController {
   }
 
   @Post('/local/signout')
-  async signout(@Body() singInDto: SingInDto) {
+  async signout() {
     return null;
   }
 
   @Post('/refresh')
-  async refreshToken(@Body() singInDto: SingInDto) {
+  async refreshToken() {
     return null;
   }
 }
