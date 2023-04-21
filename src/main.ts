@@ -9,6 +9,7 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+  //app.useGlobalGuards(new AtGuard());
   await app.listen(parseInt(process.env.SERVICE_PORT, 10) || 5000);
 }
 bootstrap();
