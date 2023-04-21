@@ -11,7 +11,6 @@ import { AuthService } from './auth.service';
 import { SingUpDto, SingInDto } from './dto';
 import { Tokens } from './types';
 import { Request } from 'express';
-import { AuthGuard } from '@nestjs/passport';
 import { AtGuard, RtGuard } from 'src/common';
 
 @Controller('/api/v1/auth/')
