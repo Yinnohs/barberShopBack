@@ -1,24 +1,29 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SingUpDto } from './dto/SignUp.dto';
-import { SingInDto } from './dto';
+import { SingUpDto, SingInDto } from './dto';
 
-@Controller('/api/v1/auth')
+@Controller('/api/v1/auth/')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('/signup')
+  @Post('/local/signup')
   async signup(@Body() singUpDto: SingUpDto) {
     return await this.authService.signup(singUpDto);
   }
 
-  @Post('/signin')
+  @HttpCode(200)
+  @Post('/local/signin')
   async signin(@Body() singInDto: SingInDto) {
     return this.authService.signin(singInDto);
   }
 
-  @Get('/sigout')
-  async signout() {
-    return this.authService.signout();
+  @Post('/local/signout')
+  async signout(@Body() singInDto: SingInDto) {
+    return null;
+  }
+
+  @Post('/refresh')
+  async refreshToken(@Body() singInDto: SingInDto) {
+    return null;
   }
 }

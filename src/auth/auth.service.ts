@@ -65,6 +65,10 @@ export class AuthService {
   }
 
   async signout() {
-    return { message: 'signout good' };
+    return null;
+  }
+
+  async refreshToken() {
+    return null;
   }
 }
