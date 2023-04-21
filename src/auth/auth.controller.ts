@@ -12,6 +12,7 @@ import { SingUpDto, SingInDto } from './dto';
 import { Tokens } from './types';
 import { Request } from 'express';
 import { AtGuard, RtGuard } from 'src/common';
+import { GetCurrentUser } from 'src/common/decorators';
 
 @Controller('/api/v1/auth/')
 export class AuthController {
@@ -32,17 +33,17 @@ export class AuthController {
   @UseGuards(AtGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/logout')
-  async logout(@Req() req: Request) {
-    const user = req.user;
-    console.log(user);
-    return this.authService.logout(user['sub']);
+  async logout(@GetCurrentUser('sub') id: number) {
+    return this.authService.logout(id);
   }
 
   @UseGuards(RtGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/refresh')
-  async refreshToken(@Req() req: Request) {
-    const user = req.user;
-    this.authService.refreshToken(user['sub'], user['refreshToken']);
+  async refreshToken(
+    @GetCurrentUser('sub') id: number,
+    @GetCurrentUser('refreshToken') token: string,
+  ) {
+    this.authService.refreshToken(id, token);
   }
 }
