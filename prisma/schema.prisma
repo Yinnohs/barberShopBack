@@ -10,15 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Role{
-  id Int @default(autoincrement()) @id
-  name String
-  createdAt DateTime
-  updatedAt DateTime
-  deletedAt DateTime
-  users User[]
-}
-
 model User{
     id Int @unique @default(autoincrement()) @id
     email String @unique
@@ -29,8 +20,8 @@ model User{
     schedules String[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    deletedAt DateTime? 
-    roles Role[] 
+    deletedAt DateTime?
+    role  String[]// CLIENT | BARBER | ADMIN
 }
 
 
