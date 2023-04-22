@@ -1,2 +1,2 @@
 export * from './UpdateUser.dto';
-export * from './UserInformation.dto';
+export * from './updateUserRole.dto';

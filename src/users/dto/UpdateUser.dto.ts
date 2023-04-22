@@ -15,12 +15,5 @@ export class UpdateUserDto
 
   @IsOptional()
   @IsString()
-  @Length(8, 25, {
-    message: 'La contraseña debe tener entre de 8 a 25 carácteres',
-  })
-  public password?: string;
-
-  @IsOptional()
-  @IsString()
   public surname?: string;
 }

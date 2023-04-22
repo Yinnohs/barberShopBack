@@ -3,7 +3,8 @@ import { UsersService } from './users.service';
 import { GetCurrentUser } from 'src/common/decorators';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { UseRoles } from 'nest-access-control';
-import { userDataResource } from 'src/common';
+import { Role, userDataResource } from 'src/common';
+import { UpdateUserRoleDto } from './dto';
 
 @Controller('/api/v1/user')
 export class UsersController {
@@ -24,6 +25,12 @@ export class UsersController {
       userId,
       updateUserInfoData,
     );
+  }
+
+  @Put('/role/update')
+  async updateUserRole(@Body() updateUserRoleData: UpdateUserRoleDto) {
+    const { id, role } = updateUserRoleData;
+    return this.usersService.updateUserRole(id, role);
   }
 
   @Get('/information')
