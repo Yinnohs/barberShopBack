@@ -9,6 +9,7 @@ import { SingInDto, SingUpDto } from './dto';
 import { JwtService } from '@nestjs/jwt';
 import { jwtExpireTime, jwtRefreshSecret, jwtSecret } from './contants';
 import { Tokens } from './types';
+import { Role } from 'src/common/types';
 
 @Injectable()
 export class AuthService {
@@ -38,13 +39,18 @@ export class AuthService {
         email,
         password: userPassword,
         surname,
+        role: ['CLIENT'],
         deletedAt: null,
         createdAt: currentDate,
         updatedAt: currentDate,
       },
     });
 
-    const tokens = await this.getTokens(user.id, user.email, []);
+    const tokens = await this.getTokens(
+      user.id,
+      user.email,
+      user.role as Role[],
+    );
     await this.updateRefreshToken(user.id, tokens.refresh_token);
     return tokens;
   }
@@ -54,7 +60,6 @@ export class AuthService {
 
     const user = await this.prisma.user.findUnique({
       where: { email },
-      include: { roles: true },
     });
     if (!user) {
       throw new ForbiddenException('Credenciales Erróneas');
@@ -65,7 +70,11 @@ export class AuthService {
       throw new ForbiddenException('Credenciales Erróneas');
     }
 
-    const tokens = await this.getTokens(user.id, user.email, []);
+    const tokens = await this.getTokens(
+      user.id,
+      user.email,
+      user.role as Role[],
+    );
     await this.updateRefreshToken(user.id, tokens.refresh_token);
     return tokens;
   }
@@ -91,7 +100,11 @@ export class AuthService {
     const rtMatches = await checkPassword(rt, user.hashedRt);
     if (!rtMatches) throw new ForbiddenException('Acceso denegado');
 
-    const tokens = await this.getTokens(user.id, user.email, []);
+    const tokens = await this.getTokens(
+      user.id,
+      user.email,
+      user.role as Role[],
+    );
     await this.updateRefreshToken(user.id, tokens.refresh_token);
     return tokens;
   }
@@ -111,7 +124,7 @@ export class AuthService {
   async getTokens(
     userId: number,
     email: string,
-    roles: string[],
+    roles: Role[],
   ): Promise<Tokens> {
     const atPromise = this.jwtService.signAsync(
       {
