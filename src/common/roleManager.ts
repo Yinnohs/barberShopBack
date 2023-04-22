@@ -14,6 +14,7 @@ export const barberDataResource = 'barberData';
 RBCA_POLICY.grant(CLIENT)
   .readOwn(userDataResource)
   .updateOwn(userDataResource)
+  .deleteOwn(userDataResource)
   .grant(BARBER)
   .extend('CLIENT')
   .read(userRoleResource)

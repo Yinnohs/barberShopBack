@@ -1,32 +1,25 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  Param,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { GetCurrentUser } from 'src/common/decorators';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
+import { UseRoles } from 'nest-access-control';
+import { userDataResource } from 'src/common';
 
 @Controller('/api/v1/user')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Put('/update/:id')
+  @Put('/information/update')
+  @UseRoles({
+    resource: userDataResource,
+    action: 'update',
+    possession: 'own',
+  })
   async updateUserInformation(
     @Param('id') id: string,
     @GetCurrentUser('sub') userId: number,
     @Body() updateUserInfoData: UpdateUserDto,
   ) {
-    const numberId = parseInt(id, 10);
-
-    if (numberId !== userId) {
-      throw new BadRequestException(
-        ' No puedes actualizar la información de otra cuenta ',
-      );
-    }
     return await this.usersService.updateUserInformation(
       userId,
       updateUserInfoData,
@@ -34,10 +27,21 @@ export class UsersController {
   }
 
   @Get('/information')
+  @UseRoles({
+    resource: userDataResource,
+    action: 'read',
+    possession: 'own',
+  })
   async getCurrentUserInformation(@GetCurrentUser('id') id: number) {
     return await this.usersService.findOneUserInformation(id);
   }
 
+  @Get('/all')
+  @UseRoles({
+    resource: userDataResource,
+    action: 'read',
+    possession: 'any',
+  })
   async getAllUsersInformation() {
     return await this.usersService.findAllUserInformation();
   }

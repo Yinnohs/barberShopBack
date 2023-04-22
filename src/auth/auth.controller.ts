@@ -9,8 +9,9 @@ import {
 import { AuthService } from './auth.service';
 import { SingUpDto, SingInDto } from './dto';
 import { Tokens } from './types';
-import { RtGuard } from 'src/common';
+import { RtGuard, userDataResource } from 'src/common';
 import { GetCurrentUser, IsPublicRoute } from 'src/common/decorators';
+import { UseRoles } from 'nest-access-control';
 
 @Controller('/api/v1/auth/')
 export class AuthController {
@@ -31,6 +32,11 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @UseRoles({
+    resource: userDataResource,
+    action: 'update',
+    possession: 'own',
+  })
   @Post('/logout')
   async logout(@GetCurrentUser('sub') id: number) {
     return this.authService.logout(id);
