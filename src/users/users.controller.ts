@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { GetCurrentUser } from 'src/common/decorators';
 import { UpdateUserDto } from './dto/UpdateUser.dto';
 import { UseRoles } from 'nest-access-control';
-import { Role, userDataResource } from 'src/common';
+import { userDataResource } from 'src/common';
 import { UpdateUserRoleDto } from './dto';
 
 @Controller('/api/v1/user')

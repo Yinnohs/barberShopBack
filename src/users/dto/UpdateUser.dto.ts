@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { IUser, OmitDates } from '../../../domain';
 
 export class UpdateUserDto

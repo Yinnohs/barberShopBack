@@ -7,6 +7,8 @@ const CLIENT: Role = 'CLIENT';
 const BARBER: Role = 'BARBER';
 const ADMIN: Role = 'ADMIN';
 
+export const ROLES: Role[] = [CLIENT, BARBER, ADMIN];
+
 export const userDataResource = 'userData';
 export const userRoleResource = 'userRole';
 export const barberDataResource = 'barberData';
