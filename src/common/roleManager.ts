@@ -7,16 +7,20 @@ const CLIENT: Role = 'CLIENT';
 const BARBER: Role = 'BARBER';
 const ADMIN: Role = 'ADMIN';
 
+export const userDataResource = 'userData';
+export const userRoleResource = 'userRole';
+export const barberDataResource = 'barberData';
+
 RBCA_POLICY.grant(CLIENT)
-  .readOwn('userData')
-  .updateOwn('userData')
+  .readOwn(userDataResource)
+  .updateOwn(userDataResource)
   .grant(BARBER)
   .extend('CLIENT')
-  .read('UserRole')
+  .read(userRoleResource)
   .grant(ADMIN)
   .extend('BARBER')
-  .read('userData')
-  .update('userData')
-  .delete('userData')
-  .update('userRole')
-  .create('createBarber');
+  .read(userDataResource)
+  .update(userDataResource)
+  .delete(userDataResource)
+  .update(userRoleResource)
+  .create(barberDataResource);
