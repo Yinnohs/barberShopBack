@@ -36,6 +36,7 @@ export class AuthController {
     return this.authService.logout(id);
   }
 
+  @IsPublicRoute()
   @UseGuards(RtGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/refresh')
@@ -43,6 +44,6 @@ export class AuthController {
     @GetCurrentUser('sub') id: number,
     @GetCurrentUser('refreshToken') token: string,
   ) {
-    this.authService.refreshToken(id, token);
+    return this.authService.refreshToken(id, token);
   }
 }
