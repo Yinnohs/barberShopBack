@@ -17,11 +17,32 @@ model User{
     surname String
     password String
     hashedRt String?
-    schedules String[]
+    schedules Schedule[]
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     deletedAt DateTime?
     role  String[] // CLIENT | BARBER | ADMIN
+}
+
+model Service{
+  id Int @unique @default(autoincrement()) @id
+  description String
+  price Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+  schedules Schedule[]
+}
+
+model Schedule{
+  id Int @unique @default(autoincrement()) @id
+  barber User @relation(fields: [barberId], references: [id])
+  barberId Int
+  service Service[]
+  ScheduledDateTime DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
 
 
