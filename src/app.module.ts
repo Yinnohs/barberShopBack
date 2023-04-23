@@ -6,6 +6,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AtGuard, RBCA_POLICY } from './common';
 import { ACGuard, AccessControlModule } from 'nest-access-control';
 import { ServiceModule } from './service/service.module';
+import { SchedulesModule } from './schedules/schedules.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ServiceModule } from './service/service.module';
     AuthModule,
     AccessControlModule.forRoles(RBCA_POLICY),
     ServiceModule,
+    SchedulesModule,
   ],
   controllers: [],
   providers: [
