@@ -28,6 +28,7 @@ model Service{
   id Int @unique @default(autoincrement()) @id
   description String
   price Decimal
+  isActive Boolean
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   deletedAt DateTime?
