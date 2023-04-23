@@ -40,6 +40,7 @@ model Schedule{
   barber User @relation(fields: [barberId], references: [id])
   barberId Int
   service Service[]
+  status Boolean
   ScheduledDateTime DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
