@@ -46,3 +46,11 @@ NrCyJSPi3y9OmN+rAkEAgfOAw79QSj4VPPr+B20pR4pNIFN8r61d20cIPLrUJDoi
 sY+1ucfoCDYu7N/BggNtNzkvj7KNAZ5m2I1nB8/0Lw=="
 
 ```
+
+docker env
+
+```
+POSTGRES_USER =jose
+POSTGRES_PASSWORD =123
+POSTGRES_DB =barberShop
+```
