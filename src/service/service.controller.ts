@@ -19,7 +19,7 @@ export class ServiceController {
     return await this.serviceService.createService(createServiceData);
   }
 
-  @Post('/all')
+  @Get('/all')
   async findAllServices(@Body('page') page = 0, @Body('limit') limit = 10) {
     return await this.serviceService.findAllServices(page, limit);
   }

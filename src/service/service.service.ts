@@ -7,6 +7,7 @@ export class ServiceService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllServices(skip = 0, take = 10) {
+    const currentPage = skip + 1;
     const servicesCount = await this.prisma.service.count();
     const totalPages = Math.floor(servicesCount / take) || 1;
     const data = await this.prisma.service.findMany({
@@ -24,7 +25,7 @@ export class ServiceService {
 
     return {
       limit: take,
-      page: skip,
+      page: currentPage,
       lastPage: totalPages,
       data,
     };

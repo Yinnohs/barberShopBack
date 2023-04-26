@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
-import { select } from './utils';
 
 @Injectable()
 export class ScheduleService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAllSchedules(skip: number, take: number) {
+    const currentPage = skip + 1;
     return await this.prisma.schedule.findMany({
       where: {
         deletedAt: {
@@ -17,7 +17,7 @@ export class ScheduleService {
         barber: true,
         service: true,
       },
-      skip,
+      skip: currentPage,
       take,
     });
   }
