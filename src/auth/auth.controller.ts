@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -51,5 +52,11 @@ export class AuthController {
     @GetCurrentUser('refreshToken') token: string,
   ) {
     return this.authService.refreshToken(id, token);
+  }
+
+  @IsPublicRoute()
+  @Get('/')
+  async getHealth() {
+    return { message: 'is online' };
   }
 }
