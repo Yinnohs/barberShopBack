@@ -6,6 +6,7 @@ export interface IUser {
   password: string;
   hashedRt?: string;
   schedules: string[];
+  role: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;
