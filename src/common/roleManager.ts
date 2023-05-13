@@ -12,8 +12,12 @@ export const ROLES: Role[] = [CLIENT, BARBER, ADMIN];
 export const userDataResource = 'userData';
 export const userRoleResource = 'userRole';
 export const barberDataResource = 'barberData';
+export const createAdminClaim = 'createAdminClaim';
+export const createBarberClaim = 'createBarberClaim';
+export const allReadClaims = 'allReadsClaim';
 
 RBCA_POLICY.grant(CLIENT)
+  .readAny(allReadClaims)
   .readOwn(userDataResource)
   .updateOwn(userDataResource)
   .deleteOwn(userDataResource)
@@ -26,4 +30,6 @@ RBCA_POLICY.grant(CLIENT)
   .update(userDataResource)
   .delete(userDataResource)
   .update(userRoleResource)
-  .create(barberDataResource);
+  .create(barberDataResource)
+  .create(createBarberClaim)
+  .create(createAdminClaim);

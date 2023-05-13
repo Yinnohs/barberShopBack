@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { jwtRefreshSecret, jwtSecret } from '../contants';
+import { jwtRefreshSecret } from '../contants';
 import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
 

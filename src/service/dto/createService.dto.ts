@@ -1,12 +1,12 @@
-import { IsBoolean, IsDecimal, IsString, Length } from 'class-validator';
+import { IsBoolean, IsNumber, IsString, Length } from 'class-validator';
 import { IService } from 'domain/Service';
 
 export class CreateServiceDto implements Partial<IService> {
   @IsString()
-  @Length(20, 150)
+  @Length(5, 150)
   description: string;
 
-  @IsDecimal()
+  @IsNumber()
   price: number;
 
   @IsBoolean()

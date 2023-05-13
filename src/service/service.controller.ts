@@ -6,9 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { CreateServiceDto, updateServiceDto } from './dto';
+import { allReadClaims } from 'src/common';
+import { UseRoles } from 'nest-access-control';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/api/v1/service')
 export class ServiceController {
@@ -19,8 +23,9 @@ export class ServiceController {
     return await this.serviceService.createService(createServiceData);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('/all')
-  async findAllServices(@Body('page') page = 0, @Body('limit') limit = 10) {
+  async findAllServices(@Body('page') page = 0, @Body('limit') limit = 1000) {
     return await this.serviceService.findAllServices(page, limit);
   }
 

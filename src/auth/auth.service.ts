@@ -71,6 +71,68 @@ export class AuthService {
     return { ...tokens, role: user.role };
   }
 
+  async signupBarberLocal(singUpDto: SingUpDto) {
+    const { email, name, password, surname } = singUpDto;
+
+    const userExist = await this.prisma.user.findUnique({ where: { email } });
+
+    if (userExist) {
+      throw new BadRequestException('El email ya existe');
+    }
+
+    const userPassword = await hashPassword(password, this.salts);
+
+    const currentDate = new Date();
+
+    const user = await this.prisma.user.create({
+      data: {
+        name,
+        email,
+        password: userPassword,
+        surname,
+        role: 'BARBER',
+        deletedAt: null,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+      },
+    });
+
+    const tokens = await this.getTokens(user.id, user.email, user.role as Role);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+    return { ...tokens, role: user.role };
+  }
+
+  async signupAdminLocal(singUpDto: SingUpDto) {
+    const { email, name, password, surname } = singUpDto;
+
+    const userExist = await this.prisma.user.findUnique({ where: { email } });
+
+    if (userExist) {
+      throw new BadRequestException('El email ya existe');
+    }
+
+    const userPassword = await hashPassword(password, this.salts);
+
+    const currentDate = new Date();
+
+    const user = await this.prisma.user.create({
+      data: {
+        name,
+        email,
+        password: userPassword,
+        surname,
+        role: 'ADMIN',
+        deletedAt: null,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+      },
+    });
+
+    const tokens = await this.getTokens(user.id, user.email, user.role as Role);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+    return { ...tokens, role: user.role };
+  }
+
   async logout(userId: number) {
     await this.prisma.user.updateMany({
       where: {

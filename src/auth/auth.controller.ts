@@ -10,7 +10,12 @@ import {
 import { AuthService } from './auth.service';
 import { SingUpDto, SingInDto } from './dto';
 import { Tokens } from './types';
-import { RtGuard, userDataResource } from 'src/common';
+import {
+  RtGuard,
+  createAdminClaim,
+  createBarberClaim,
+  userDataResource,
+} from 'src/common';
 import { GetCurrentUser, IsPublicRoute } from 'src/common/decorators';
 import { UseRoles } from 'nest-access-control';
 
@@ -23,6 +28,30 @@ export class AuthController {
   @Post('/local/signup')
   async signupLocal(@Body() singUpDto: SingUpDto): Promise<Tokens> {
     return await this.authService.signupLocal(singUpDto);
+  }
+
+  @IsPublicRoute()
+  @HttpCode(HttpStatus.CREATED)
+  @UseRoles({
+    resource: createAdminClaim,
+    action: 'create',
+    possession: 'any',
+  })
+  @Post('/local/signup/barber')
+  async signupBarberLocal(@Body() singUpDto: SingUpDto): Promise<Tokens> {
+    return await this.authService.signupBarberLocal(singUpDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseRoles({
+    resource: createBarberClaim,
+    action: 'create',
+    possession: 'any',
+  })
+  @HttpCode(HttpStatus.CREATED)
+  @Post('/local/signup/admin')
+  async signupAdminLocal(@Body() singUpDto: SingUpDto): Promise<Tokens> {
+    return await this.authService.signupAdminLocal(singUpDto);
   }
 
   @IsPublicRoute()
