@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateUserDto } from './dto';
-import { select } from './utils';
+import { select, selectBarbers } from './utils';
 import { Role } from 'src/common';
 
 @Injectable()
@@ -9,11 +9,12 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async findOneUserInformation(id: number) {
-    const user = await this.prisma.user.findUnique({
+    console.log(id);
+    const user = await this.prisma.user.findFirst({
       where: {
-        id,
+        id: id,
       },
-      select,
+      select: selectBarbers,
     });
 
     if (!user) throw new BadRequestException();
@@ -45,6 +46,19 @@ export class UsersService {
   async findAllUserInformation() {
     const users = await this.prisma.user.findMany({ select });
     return users;
+  }
+
+  async findAllBarbers() {
+    const barbers = await this.prisma.user.findMany({
+      where: {
+        role: 'BARBER',
+        OR: {
+          role: 'ADMIN',
+        },
+      },
+      select,
+    });
+    return barbers;
   }
 
   async updateUserRole(id: number, role: Role) {

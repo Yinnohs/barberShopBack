@@ -39,7 +39,8 @@ export class UsersController {
     action: 'read',
     possession: 'own',
   })
-  async getCurrentUserInformation(@GetCurrentUser('id') id: number) {
+  async getCurrentUserInformation(@GetCurrentUser('sub') id: any) {
+    console.log({ id });
     return await this.usersService.findOneUserInformation(id);
   }
 
@@ -51,5 +52,10 @@ export class UsersController {
   })
   async getAllUsersInformation() {
     return await this.usersService.findAllUserInformation();
+  }
+
+  @Get('/barbers')
+  async getAllBarbers() {
+    return await this.usersService.findAllBarbers();
   }
 }

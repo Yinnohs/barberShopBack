@@ -6,13 +6,8 @@ import { CreateServiceDto, updateServiceDto } from './dto';
 export class ServiceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAllServices(skip = 0, take = 10) {
-    const currentPage = skip + 1;
-    const servicesCount = await this.prisma.service.count();
-    const totalPages = Math.floor(servicesCount / take) || 1;
+  async findAllServices() {
     const data = await this.prisma.service.findMany({
-      skip,
-      take,
       orderBy: {
         updatedAt: 'desc',
       },
@@ -21,14 +16,14 @@ export class ServiceService {
           equals: null,
         },
       },
+      select: {
+        id: true,
+        description: true,
+        price: true,
+      },
     });
 
-    return {
-      limit: take,
-      page: currentPage,
-      lastPage: totalPages,
-      data,
-    };
+    return data;
   }
 
   async findOneService(id: number) {
