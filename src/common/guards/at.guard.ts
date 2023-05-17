@@ -17,7 +17,6 @@ export class AtGuard extends AuthGuard('jwt') {
     ]);
 
     if (isPublic) return true;
-    console.log(isPublic);
     const isActive = super.canActivate(context);
     return isActive;
   }

@@ -40,7 +40,6 @@ export class UsersController {
     possession: 'own',
   })
   async getCurrentUserInformation(@GetCurrentUser('sub') id: any) {
-    console.log({ id });
     return await this.usersService.findOneUserInformation(id);
   }
 
