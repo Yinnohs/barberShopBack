@@ -1,9 +1,7 @@
-import { User } from '@prisma/client';
-
 export interface ISchedule {
   id: number;
   barberId: number;
-  barber: User;
+  userId: number;
   service: number[];
   status: boolean;
   ScheduledDateTime: Date;

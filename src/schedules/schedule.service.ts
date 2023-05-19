@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
+import { CreateSchaduleDto } from './dto';
 
 @Injectable()
 export class ScheduleService {
@@ -26,6 +27,18 @@ export class ScheduleService {
     return await this.prisma.schedule.findMany({
       where: {
         barberId,
+      },
+      include: {
+        barber: true,
+        service: true,
+      },
+    });
+  }
+
+  async findAllUserSchedules(userId: number) {
+    return await this.prisma.schedule.findMany({
+      where: {
+        userId,
       },
       include: {
         barber: true,
@@ -65,6 +78,24 @@ export class ScheduleService {
     });
 
     if (!schedule) throw new BadRequestException();
+
+    return schedule;
+  }
+
+  async createSchedule(createScheduleData: CreateSchaduleDto) {
+    const schedule = this.prisma.schedule.create({
+      data: {
+        status: true,
+        userId: createScheduleData.userId,
+        barberId: createScheduleData.barberId,
+        ScheduledDateTime: createScheduleData.ScheduledDateTime,
+        service: {
+          connect: createScheduleData.service.map((id) => {
+            return { id };
+          }),
+        },
+      },
+    });
 
     return schedule;
   }

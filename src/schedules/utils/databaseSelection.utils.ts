@@ -5,7 +5,6 @@ export const { select }: IDatabasePartialSelection<ISchedule> = {
   select: {
     id: true,
     barberId: true,
-    barber: true,
     service: true,
     ScheduledDateTime: true,
     status: true,

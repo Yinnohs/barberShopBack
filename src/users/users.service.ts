@@ -47,13 +47,23 @@ export class UsersService {
     return users;
   }
 
-  async findAllBarbers() {
+  async findAllBarbers(id: number) {
     const barbers = await this.prisma.user.findMany({
       where: {
-        role: 'BARBER',
-        OR: {
-          role: 'ADMIN',
-        },
+        OR: [
+          {
+            role: 'ADMIN',
+          },
+          ,
+          { role: 'BARBER' },
+        ],
+        AND: [
+          {
+            NOT: {
+              id,
+            },
+          },
+        ],
       },
       select,
     });

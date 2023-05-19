@@ -30,7 +30,8 @@ export class UsersController {
   @Put('/role/update')
   async updateUserRole(@Body() updateUserRoleData: UpdateUserRoleDto) {
     const { id, role } = updateUserRoleData;
-    return this.usersService.updateUserRole(id, role);
+    const user = this.usersService.updateUserRole(id, role);
+    return user;
   }
 
   @Get('/information')
@@ -54,7 +55,7 @@ export class UsersController {
   }
 
   @Get('/barbers')
-  async getAllBarbers() {
-    return await this.usersService.findAllBarbers();
+  async getAllBarbers(@GetCurrentUser('sub') id: number) {
+    return await this.usersService.findAllBarbers(id);
   }
 }
