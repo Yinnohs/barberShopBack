@@ -30,7 +30,6 @@ export class AuthController {
     return await this.authService.signupLocal(singUpDto);
   }
 
-  @IsPublicRoute()
   @HttpCode(HttpStatus.CREATED)
   @UseRoles({
     resource: createAdminClaim,
