@@ -7,7 +7,7 @@ export class RequestLoggerMiddleware implements NestMiddleware {
   private logger = new Logger('HTTP');
 
   use(request: Request, response: Response, next: NextFunction): void {
-    const { ip, method, path: url } = request;
+    const { ip, method, path } = request;
     const userAgent = request.get('user-agent') || '';
 
     response.on('close', () => {
@@ -15,7 +15,7 @@ export class RequestLoggerMiddleware implements NestMiddleware {
       const contentLength = response.get('content-length');
       console.log(request.method);
       this.logger.log(
-        `${method} ${url} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
+        `${method} ${path.toLowerCase()} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
       );
     });
 

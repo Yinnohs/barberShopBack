@@ -17,10 +17,26 @@ export class UsersController {
     possession: 'own',
   })
   async updateUserInformation(
-    @Param('id') id: string,
     @GetCurrentUser('sub') userId: number,
     @Body() updateUserInfoData: UpdateUserDto,
   ) {
+    return await this.usersService.updateUserInformation(
+      userId,
+      updateUserInfoData,
+    );
+  }
+
+  @UseRoles({
+    resource: userDataResource,
+    action: 'update',
+    possession: 'any',
+  })
+  @Put('/information/update/barber/:id')
+  async updateUserBarberInformation(
+    @Param('id') id: string,
+    @Body() updateUserInfoData: UpdateUserDto,
+  ) {
+    const userId = parseInt(id, 10);
     return await this.usersService.updateUserInformation(
       userId,
       updateUserInfoData,
@@ -40,8 +56,20 @@ export class UsersController {
     action: 'read',
     possession: 'own',
   })
-  async getCurrentUserInformation(@GetCurrentUser('sub') id: any) {
-    return await this.usersService.findOneUserInformation(id);
+  async getCurrentUserInformation(@GetCurrentUser('sub') id: string) {
+    const userId = parseInt(id, 10);
+    return await this.usersService.findOneUserInformation(userId);
+  }
+
+  @UseRoles({
+    resource: userDataResource,
+    action: 'update',
+    possession: 'any',
+  })
+  @Get('/information/barber/:id')
+  async getCurrentUserInformationById(@Param('id') id: string) {
+    const userId = parseInt(id, 10);
+    return await this.usersService.findOneUserInformation(userId);
   }
 
   @Get('/all')

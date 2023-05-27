@@ -4,7 +4,7 @@ export interface ISchedule {
   userId: number;
   service: number[];
   status: boolean;
-  ScheduledDateTime: Date;
+  scheduledDateTime: Date | string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;

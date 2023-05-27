@@ -1,12 +1,17 @@
 import { OmitDates } from 'domain/utils';
 import { ISchedule } from 'domain/Schedule';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
-export class CreateSchaduleDto
-  implements OmitDates<Omit<ISchedule, 'id' | 'status'>>
+export class CreateScheduleDto
+  implements OmitDates<Omit<ISchedule, 'id' | 'status' | 'updatedAt'>>
 {
+  @IsNumber()
   public barberId: number;
-  public service: number[];
-  public ScheduledDateTime: Date;
-  public updatedAt: Date;
+  @IsNumber()
   public userId: number;
+  @IsArray()
+  public service: number[];
+
+  @IsString()
+  public scheduledDateTime: Date | string;
 }

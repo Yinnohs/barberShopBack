@@ -48,11 +48,15 @@ export class ServiceService {
         id,
       },
       data: {
-        ...updateServiceData,
+        isActive: updateServiceData.isActive,
+        description: updateServiceData.description,
+        price: updateServiceData.price,
       },
     });
 
     if (!service) throw new BadRequestException();
+
+    console.log({ service });
 
     return service;
   }

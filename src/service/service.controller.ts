@@ -33,9 +33,17 @@ export class ServiceController {
     return await this.serviceService.findOneService(serviceId);
   }
 
-  @Put('/')
-  async updateService(@Body() updateServiceData: updateServiceDto) {
-    return await this.updateService(updateServiceData);
+  @Put('/:id')
+  async updateService(
+    @Param('id') id: string,
+    @Body() updateServiceData: updateServiceDto,
+  ) {
+    console.log({ updateServiceData });
+    const serviceId = parseInt(id, 10);
+    return await this.serviceService.updateService(
+      serviceId,
+      updateServiceData,
+    );
   }
 
   @Delete(':id')
