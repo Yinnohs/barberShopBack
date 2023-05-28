@@ -1,10 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateScheduleDto } from './dto';
 
 @Injectable()
 export class ScheduleService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Inject('momentWrapper') moment: moment.Moment,
+  ) {}
 
   async findAllSchedules(skip: number, take: number) {
     const currentPage = skip + 1;
@@ -37,13 +40,42 @@ export class ScheduleService {
         barber: true,
         service: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
   }
 
-  async findAllUserSchedules(userId: number) {
+  async findAllBarberTakenSlotByDay(barberId: number, currentDate: string) {
+    const currentDateTimeSlots = this.getTimeSlotArray(currentDate);
+
+    const takenSlots = await this.prisma.schedule.findMany({
+      where: {
+        barberId,
+        AND: {
+          deletedAt: {
+            equals: null,
+          },
+          ScheduledDateTime: {
+            in: currentDateTimeSlots,
+          },
+        },
+      },
+      select: {
+        ScheduledDateTime: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return takenSlots;
+  }
+
+  async findAllUserSchedules(id: number) {
     return await this.prisma.schedule.findMany({
       where: {
-        userId,
+        userId: id,
         AND: {
           deletedAt: {
             equals: null,
@@ -51,8 +83,32 @@ export class ScheduleService {
         },
       },
       include: {
-        barber: true,
-        service: true,
+        barber: {
+          select: {
+            name: true,
+            email: true,
+            id: true,
+            surname: true,
+            hashedRt: false,
+            password: false,
+            createdAt: false,
+            deletedAt: false,
+            updatedAt: false,
+          },
+        },
+        service: {
+          select: {
+            description: true,
+            id: true,
+            price: true,
+            createdAt: false,
+            deletedAt: false,
+            updatedAt: false,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }
@@ -68,6 +124,9 @@ export class ScheduleService {
       include: {
         barber: true,
         service: true,
+      },
+      orderBy: {
+        deletedAt: 'desc',
       },
     });
 
@@ -92,14 +151,15 @@ export class ScheduleService {
     return schedule;
   }
 
-  async createSchedule(createScheduleData: CreateScheduleDto) {
+  async createSchedule(createScheduleData: CreateScheduleDto, id: number) {
     const services = createScheduleData.service.map((id) => {
       return { id };
     });
-    const schedule = this.prisma.schedule.create({
+
+    const schedule = await this.prisma.schedule.create({
       data: {
         status: true,
-        userId: createScheduleData.userId,
+        userId: id,
         barberId: createScheduleData.barberId,
         ScheduledDateTime: createScheduleData.scheduledDateTime,
         service: {
@@ -108,6 +168,24 @@ export class ScheduleService {
       },
     });
 
+    console.log(schedule.ScheduledDateTime);
+
     return schedule;
+  }
+
+  private getTimeSlotArray(today: string) {
+    const currentDate = new Date(today);
+    currentDate.setHours(currentDate.getHours() - 1);
+
+    let timeSlotsQuantity = 24;
+    const timeSlotMinutesBreach = 30;
+    const dates: string[] = [];
+
+    while (timeSlotsQuantity--) {
+      dates.push(currentDate.toISOString());
+      currentDate.setMinutes(currentDate.getMinutes() + timeSlotMinutesBreach);
+    }
+
+    return dates;
   }
 }
