@@ -5,12 +5,7 @@ more docs soon ....
 
 ## Todo List
 
-- Create Users X
-- Create Auth X
-- Create Roles Base Access Control X
-- Create Barber Cut Schedule
-- Create Admin add a Service
-- Create Schedule integration to user
+ALL done!
 
 envs used
 
@@ -47,10 +42,12 @@ sY+1ucfoCDYu7N/BggNtNzkvj7KNAZ5m2I1nB8/0Lw=="
 
 ```
 
-docker env
+docker-compose.env env
 
 ```
 POSTGRES_USER =jose
 POSTGRES_PASSWORD =123
 POSTGRES_DB =barberShop
 ```
+
+NOTE: the app does not come by default with a admin user so please create a user and update to ADMIN the user role inside the database
